@@ -94,40 +94,33 @@ svm.fit(X_train, Y_train)
 # print(f"Accuracy data pre 30% : {metrics.accuracy_score(Y_test,predict)*100}")
 
 #prediction of the input 1 image
+img_test = cv2.imread('Char-dataset/image_test/24-1.jpg')
+# convert images to grayscale
+img_test = cv2.cvtColor(img_test, cv2.COLOR_BGR2GRAY)
+# convert images to 200px
+img_test = cv2.resize(img_test, (200, 200))
+img = [img_test]
+img_sift_descriptors = extract_sift_features(img)
+img_bow_feature = create_features_bag_of_words(img_sift_descriptors, Bag_of_Words, num_clusters)
+img_predict = svm.predict(img_bow_feature)
 
-def outPutResult(img):
-    # img_test = cv2.imread('Char-dataset/image_test/err1.jpg')
+predict_percentage = svm.predict_proba(img_bow_feature)[0]
+predict = predict_percentage.argmax()
+score = predict_percentage[predict]
 
-    img_test = cv2.imread(img)
-    # convert images to grayscale
-    img_test = cv2.cvtColor(img_test, cv2.COLOR_BGR2GRAY)
-    # convert images to 200px
-    img_test = cv2.resize(img_test, (200, 200))
-    img = [img_test]
-    img_sift_descriptors = extract_sift_features(img)
-    img_bow_feature = create_features_bag_of_words(img_sift_descriptors, Bag_of_Words, num_clusters)
-    img_predict = svm.predict(img_bow_feature)
-    predict_percentage = svm.predict_proba(img_bow_feature)[0]
-    predict = predict_percentage.argmax()
-    score = predict_percentage[predict]
+for key, value in label2id.items():
+    if value == img_predict[0]:
+        print('index prediction: ', key)
+        # plt.title(key)
+print('your prediction : ', label[img_predict[0]])
+# print(score)
+accuracy = score
+print("Accuracy : ", accuracy)
+#Show image
+# plt.title(label[prediction[0]])
+plt.imshow(img_test, 'gray'), plt.show()
+# plt.axis('off')
 
-    Keys = 0
-
-    for key, value in label2id.items():
-        if value == img_predict[0]:
-            # print('index prediction: ', key)
-            # plt.title(key)
-            Keys = key
-    print('your prediction : ', label[img_predict[0]])
-    print(1-score)
-    #Accuracy
-    # accuracy = metrics.accuracy_score(img_predict)
-    # print("Accuracy : ", accuracy)
-    #Show image
-    # plt.title(label[prediction[0]])
-    # plt.imshow(img_test, 'gray'), plt.show()
-    # plt.axis('off')
-    return label[img_predict[0]],Keys
 
 
 # #prediction File Path
