@@ -3,7 +3,7 @@ from PIL import ImageTk,Image
 from tkinter import filedialog
 import main
 
-imagePath = "Char-dataset/image_test/1.png"
+imagePath = "Char-dataset/cover/0.25x.png"
 # imagePath = "C:/Users/RosCheat/Pictures/241-2416641_madara-uchiha-by-aikawaiichan-aikawaiichan-madara.jpg"
 
 def checkForImage():
@@ -18,10 +18,11 @@ def checkForImage():
 
     imageLabel.config(image=img)
     imageLabel.image = img
-    output , key = main.outPutResult(imagePath)
-    imageRightLabel.config(text=output,font=("Calibri",40,"bold"))
+    output , pre_idex , = main.outPutResult(imagePath)
+    imageRightLabel.config(text=output,font=("Calibri",300,"bold"))
 
-    bottomLabel.config(text="Prediction index : " + key, font=("Calibri",20,"bold"))
+    bottomLabel.config(text="Prediction index : " + pre_idex, font=("Calibri",15,"bold"))
+    # bottomLabel.config(text="Prediction index : " + key, font=("Calibri", 10, "bold"))
 
 root = Tk()
 
@@ -36,7 +37,7 @@ titleLabel = Label(root,text="CHARACTER PREDICTION",font=("Calibri",20,'bold'),p
 
 global leftFrame
 leftFrame = Frame(root,background="#ddd")
-leftFrame.place(relx=0.00, rely=0.15, relwidth=0.49,relheight=0.60)
+leftFrame.place(relx=0.00, rely=0.15, relwidth=0.49,relheight=0.50)
 
 img = ImageTk.PhotoImage(Image.open(imagePath))
 
@@ -45,7 +46,7 @@ imageLabel = Label(leftFrame,image=img)
 imageLabel.place(relx=0.01, rely=0.01, relwidth=0.98,relheight=0.88)
 
 rightFrame = Frame(root,background="#ddd")
-rightFrame.place(relx=0.51, rely=0.15, relwidth=0.49,relheight=0.60)
+rightFrame.place(relx=0.51, rely=0.15, relwidth=0.49,relheight=0.50)
 
 global imageRightLabel
 imageRightLabel = Label(rightFrame)

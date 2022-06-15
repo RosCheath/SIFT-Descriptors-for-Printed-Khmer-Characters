@@ -81,20 +81,23 @@ def create_features_bag_of_words(image_descriptors, Bag_of_Words, num_clusters):
 
 #Sklean X and Y model
 X_features = create_features_bag_of_words(image_descriptors, Bag_of_Words, num_clusters)
-X_train, X_test, Y_train, Y_test = train_test_split(X_features, Y, test_size=0.3, random_state=42)
+X_train, X_test, Y_train, Y_test = train_test_split(X_features, Y, test_size=0.25, random_state=42)
 svm = sklearn.svm.SVC(kernel= 'linear', C=1, probability=True)
 svm.fit(X_train, Y_train)
 
 # # prediction data 30% of 100%
 # predict = svm.predict(X_test)
-# # Accuracy1 = svm.score(X_test, Y_test)
+# Accuracy1 = svm.score(X_train, Y_train)
+# Accuracy2 = svm.score(X_test, Y_test)
 # # Accuracy = metrics.accuracy_score(Y_test,predict)
 # print('Total data Train :', len(X_train))
 # print('Total data Test :', len(X_test))
+# print('Accuracy data Train :', Accuracy1)
+# print('Accuracy data Test :', Accuracy2)
 # print(f"Accuracy data pre 30% : {metrics.accuracy_score(Y_test,predict)*100}")
 
 #prediction of the input 1 image
-img_test = cv2.imread('Char-dataset/image_test/24-1.jpg')
+img_test = cv2.imread('Char-dataset/testingset/1/1.jpg')
 # convert images to grayscale
 img_test = cv2.cvtColor(img_test, cv2.COLOR_BGR2GRAY)
 # convert images to 200px
@@ -102,24 +105,33 @@ img_test = cv2.resize(img_test, (200, 200))
 img = [img_test]
 img_sift_descriptors = extract_sift_features(img)
 img_bow_feature = create_features_bag_of_words(img_sift_descriptors, Bag_of_Words, num_clusters)
-img_predict = svm.predict(img_bow_feature)
+# accu probability
 
-predict_percentage = svm.predict_proba(img_bow_feature)[0]
-predict = predict_percentage.argmax()
-score = predict_percentage[predict]
+probability = svm.predict_proba(img_bow_feature)
+for ind,val in enumerate(label):
+    print(f'{val} = {probability[0][ind]*100}')
 
-for key, value in label2id.items():
-    if value == img_predict[0]:
-        print('index prediction: ', key)
-        # plt.title(key)
-print('your prediction : ', label[img_predict[0]])
-# print(score)
-accuracy = score
-print("Accuracy : ", accuracy)
-#Show image
-# plt.title(label[prediction[0]])
-plt.imshow(img_test, 'gray'), plt.show()
-# plt.axis('off')
+# #prediction of the input 1 image
+# img_test = cv2.imread('Char-dataset/testingset/1/1.jpg')
+# # convert images to grayscale
+# img_test = cv2.cvtColor(img_test, cv2.COLOR_BGR2GRAY)
+# # convert images to 200px
+# img_test = cv2.resize(img_test, (200, 200))
+# img = [img_test]
+# img_sift_descriptors = extract_sift_features(img)
+# img_bow_feature = create_features_bag_of_words(img_sift_descriptors, Bag_of_Words, num_clusters)
+# img_predict = svm.predict(img_bow_feature)
+# for key, value in label2id.items():
+#     if value == img_predict[0]:
+#         print('index prediction: ', key)
+# print('your prediction : ', label[img_predict[0]])
+# # print(score)
+# # accuracy = svm.score(img_predict)
+# # print("Accuracy : ", accuracy)
+# #Show image
+# # plt.title(label[prediction[0]])
+# # plt.imshow(img_test, 'gray'), plt.show()
+# # plt.axis('off')
 
 
 
